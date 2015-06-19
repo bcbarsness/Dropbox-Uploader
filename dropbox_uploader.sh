@@ -219,6 +219,7 @@ function usage
     echo -e "\nCommands:"
 
     echo -e "\t upload   <LOCAL_FILE/DIR ...>  <REMOTE_FILE/DIR>"
+    echo -e "\t moveToDropbox <LOCAL_FILE/DIR ...>  <REMOTE_FILE/DIR>"
     echo -e "\t download <REMOTE_FILE/DIR> [LOCAL_FILE/DIR]"
     echo -e "\t delete   <REMOTE_FILE/DIR>"
     echo -e "\t move     <REMOTE_FILE/DIR> <REMOTE_FILE/DIR>"
@@ -1185,6 +1186,22 @@ case $COMMAND in
         for (( i=$OPTIND+1; i<$#; i++ )); do
             FILE_SRC=${@:$i:1}
             db_upload "$FILE_SRC" "/$FILE_DST"
+        done
+
+    ;;
+
+    moveToDropbox)
+
+        if [[ $argnum -lt 2 ]]; then
+            usage
+        fi
+
+        FILE_DST=${@:$#:1}
+
+        for (( i=$OPTIND+1; i<$#; i++ )); do
+            FILE_SRC=${@:$i:1}
+            db_upload "$FILE_SRC" "/$FILE_DST"
+            rm -fr "$FILE_SRC"  ## No Error Checking - Dangerous
         done
 
     ;;
